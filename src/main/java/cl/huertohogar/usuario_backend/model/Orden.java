@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +29,8 @@ public class Orden {
     @Schema(description = "Identificador único de la orden")
     private Integer idOrden;
 
-    @Column(name = "id_usuario", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
     @Schema(description = "Usuario que realiza la orden")
     private Usuario usuario;
 

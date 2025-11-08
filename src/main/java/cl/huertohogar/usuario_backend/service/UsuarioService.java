@@ -43,7 +43,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // READ - Obtener todos los usuarios
+    // READ 
     public List<Usuario> findAll() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios.isEmpty()) {
@@ -52,13 +52,13 @@ public class UsuarioService {
         return usuarios;
     }
 
-    // READ - Obtener usuario por ID
+    // READ por ID
     public Usuario findById(Integer id) {
         return usuarioRepository.findById(id)
             .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con id: " + id));
     }
 
-    // UPDATE - Actualizar un usuario existente
+    // UPDATE 
     public Usuario update(Integer id, Usuario usuarioActualizado) {
         Usuario usuarioExistente = findById(id);
         
@@ -128,13 +128,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioExistente);
     }
 
-    // DELETE - Eliminar un usuario
+    // DELETE 
     public void deleteById(Integer id) {
         Usuario usuario = findById(id);
         usuarioRepository.delete(usuario);
     }
 
-    // CONSULTAS PERSONALIZADAS
+    // CONSULTAS RANDOM
     
     // Buscar usuario por email
     public Usuario findByEmail(String email) {
@@ -144,5 +144,13 @@ public class UsuarioService {
         }
         return usuario;
     }
+
+    // Buscar por Apellido Paterno
+    public List<Usuario> findByAPaterno(Integer idAPaterno) {
+        List<Usuario> usuarios = usuarioRepository.findByAPaterno(idAPaterno);
+        if (usuarios.isEmpty()) {
+            throw new UsuarioNotFoundException("No se encontraron usuarios con apellido paterno id: " + idAPaterno);
+        }
+        return usuarios;
 
 }

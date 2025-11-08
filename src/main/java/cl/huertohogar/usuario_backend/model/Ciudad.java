@@ -1,7 +1,5 @@
 package cl.huertohogar.usuario_backend.model;
 
-import javax.swing.plaf.synth.Region;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

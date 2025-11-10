@@ -191,11 +191,30 @@ public class UsuarioService {
         }
     }
 
+    // AUTENTICACIÓN - Autenticar por EMAIL y contraseña (recomendado)
+    public boolean authenticateByEmail(String email, String plainPassword) {
+        try {
+            Usuario usuario = findByEmail(email);
+            return verifyPassword(plainPassword, usuario.getPasswordHashed());
+        } catch (UsuarioNotFoundException e) {
+            return false;
+        }
+    }
+
     // AUTENTICACIÓN - Verificar contraseña con manejo de excepciones
     public void authenticateOrThrow(Integer idUsuario, String plainPassword) {
         if (!authenticate(idUsuario, plainPassword)) {
             throw new AuthenticationFailedException("Credenciales inválidas");
         }
+    }
+
+    // AUTENTICACIÓN - Autenticar por EMAIL con manejo de excepciones
+    public Usuario authenticateByEmailOrThrow(String email, String plainPassword) {
+        Usuario usuario = findByEmail(email);
+        if (!verifyPassword(plainPassword, usuario.getPasswordHashed())) {
+            throw new AuthenticationFailedException("Credenciales inválidas");
+        }
+        return usuario;
     }
 
     // VALIDACIÓN - Verificar si una contraseña cumple con los requisitos de seguridad

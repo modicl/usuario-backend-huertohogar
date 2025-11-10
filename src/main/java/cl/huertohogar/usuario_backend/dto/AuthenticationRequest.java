@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Request para autenticación de usuario")
 public class AuthenticationRequest {
 
-    @Schema(description = "ID del usuario", example = "1")
-    private Integer idUsuario;
+    @Schema(description = "Email del usuario", example = "luis@example.com")
+    private String email;
 
     @Schema(description = "Contraseña del usuario", example = "MiPassword123!")
     private String password;

@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.huertohogar.usuario_backend.dto.AuthenticationRequest;
+import cl.huertohogar.usuario_backend.dto.AuthenticationResponse;
 import cl.huertohogar.usuario_backend.dto.PasswordUpdateRequest;
 import cl.huertohogar.usuario_backend.dto.PasswordResetRequest;
 import cl.huertohogar.usuario_backend.dto.PasswordValidationRequest;
+import cl.huertohogar.usuario_backend.exception.AuthenticationFailedException;
+import cl.huertohogar.usuario_backend.exception.UsuarioNotFoundException;
 import cl.huertohogar.usuario_backend.model.Usuario;
 import cl.huertohogar.usuario_backend.service.UsuarioService;
+import cl.huertohogar.usuario_backend.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,6 +42,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Operation(
         summary = "Crear un nuevo usuario",
@@ -243,23 +250,27 @@ public class UsuarioController {
         )
     })
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Credenciales del usuario",
-                required = true,
-                content = @Content(
-                    schema = @Schema(implementation = AuthenticationRequest.class),
-                    examples = @ExampleObject(
-                        value = "{\"idUsuario\":1,\"password\":\"MiPassword123!\"}"
-                    )
-                )
-            )
+    public ResponseEntity<?> authenticate(
             @org.springframework.web.bind.annotation.RequestBody AuthenticationRequest request) {
-        boolean isAuthenticated = usuarioService.authenticate(request.getIdUsuario(), request.getPassword());
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Autenticación exitosa");
+        try {
+            Usuario usuario = usuarioService.authenticateByEmailOrThrow(request.getEmail(), request.getPassword());
+            String token = jwtUtil.generateToken(usuario.getIdUsuario(), usuario.getEmail());
+            
+            AuthenticationResponse response = new AuthenticationResponse(
+                token,
+                usuario.getIdUsuario(),
+                usuario.getEmail(),
+                usuario.getPNombre(),
+                usuario.getAPaterno()
+            );
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationFailedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        } catch (UsuarioNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
     }
 
     @Operation(

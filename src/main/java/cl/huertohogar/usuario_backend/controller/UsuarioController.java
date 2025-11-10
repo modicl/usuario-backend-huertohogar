@@ -130,7 +130,7 @@ public class UsuarioController {
             )
         )
     })
-    @RequireRole({"USER", "ADMIN"})
+    @RequireRole({"ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getUsuarioById(
             @Parameter(description = "ID del usuario a buscar", example = "1")

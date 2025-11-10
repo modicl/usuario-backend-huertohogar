@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.huertohogar.usuario_backend.model.Region;
 import cl.huertohogar.usuario_backend.service.RegionService;
+import cl.huertohogar.usuario_backend.config.RequireRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,6 +57,7 @@ public class RegionController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @PostMapping("")
     public ResponseEntity<Region> createRegion(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -92,6 +94,7 @@ public class RegionController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("")
     public ResponseEntity<List<Region>> getRegiones() {
         return ResponseEntity.ok(regionService.findAll());
@@ -115,6 +118,7 @@ public class RegionController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<Region> getRegionById(
             @Parameter(description = "ID de la región a buscar", example = "1")
@@ -139,6 +143,7 @@ public class RegionController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @PutMapping("/{id}")
     public ResponseEntity<Region> updateRegion(
             @Parameter(description = "ID de la región a actualizar", example = "1")
@@ -166,6 +171,7 @@ public class RegionController {
         @ApiResponse(responseCode = "404", description = "Región no encontrada"),
         @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
+    @RequireRole({"ADMIN"})
     @PatchMapping("/{id}")
     public ResponseEntity<Region> partialUpdateRegion(
             @Parameter(description = "ID de la región", example = "1")
@@ -196,6 +202,7 @@ public class RegionController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRegion(
             @Parameter(description = "ID de la región a eliminar", example = "1")
@@ -216,6 +223,7 @@ public class RegionController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("/nombreRegion")
     public ResponseEntity<Region> getRegionPorNombre(
             @Parameter(description = "Nombre de la región", example = "Metropolitana")

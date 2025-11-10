@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Maven
+.m2
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Tests
+.sonarqube/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Misc
+README.md
+CHANGELOG.md
+LICENSE
+*.md

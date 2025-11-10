@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.huertohogar.usuario_backend.model.Ciudad;
 import cl.huertohogar.usuario_backend.service.CiudadService;
+import cl.huertohogar.usuario_backend.config.RequireRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -55,6 +56,7 @@ public class CiudadController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @PostMapping("")
     public ResponseEntity<Ciudad> createCiudad(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -91,6 +93,7 @@ public class CiudadController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("")
     public ResponseEntity<List<Ciudad>> getCiudades() {
         return ResponseEntity.ok(ciudadService.findAll());
@@ -114,6 +117,7 @@ public class CiudadController {
             )
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<Ciudad> getCiudadById(
             @Parameter(description = "ID de la ciudad a buscar", example = "1")
@@ -138,6 +142,7 @@ public class CiudadController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @PutMapping("/{id}")
     public ResponseEntity<Ciudad> updateCiudad(
             @Parameter(description = "ID de la ciudad a actualizar", example = "1")
@@ -165,6 +170,7 @@ public class CiudadController {
         @ApiResponse(responseCode = "404", description = "Ciudad no encontrada"),
         @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
+    @RequireRole({"ADMIN"})
     @PatchMapping("/{id}")
     public ResponseEntity<Ciudad> partialUpdateCiudad(
             @Parameter(description = "ID de la ciudad", example = "1")
@@ -195,6 +201,7 @@ public class CiudadController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCiudad(
             @Parameter(description = "ID de la ciudad a eliminar", example = "1")
@@ -215,6 +222,7 @@ public class CiudadController {
             content = @Content(mediaType = "application/json")
         )
     })
+    @RequireRole({"ADMIN"})
     @GetMapping("/region/{idRegion}")
     public ResponseEntity<List<Ciudad>> getCiudadesPorRegion(
             @Parameter(description = "ID de la región", example = "1")

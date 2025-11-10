@@ -1,0 +1,55 @@
+# Dockerfile.prod
+# Dockerfile optimizado para producción
+# Construir: docker build -f Dockerfile.prod -t usuario-backend:prod .
+
+# Stage 1: Build
+FROM maven:3.9.5-eclipse-temurin-21-alpine AS builder
+
+WORKDIR /app
+
+# Copiar pom.xml
+COPY pom.xml .
+
+# Descargar dependencias (capa cacheable)
+RUN mvn dependency:resolve -q
+
+# Copiar código fuente
+COPY src ./src
+
+# Compilar
+RUN mvn clean package -DskipTests -q && \
+    ls -la target/*.jar
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+
+LABEL maintainer="Tu Nombre <tu-email@ejemplo.com>"
+LABEL version="1.0"
+LABEL description="Usuario Backend Microservice - HuertoHogar"
+
+# Instalar utilidades útiles para producción
+RUN apk add --no-cache curl bash
+
+# Crear usuario no-root
+RUN addgroup -S appuser && adduser -S appuser -G appuser
+
+WORKDIR /app
+
+# Copiar JAR del builder
+COPY --from=builder /app/target/*.jar app.jar
+
+# Cambiar propietario
+RUN chown -R appuser:appuser /app
+
+# Cambiar a usuario no-root
+USER appuser
+
+# Exponer puerto
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Punto de entrada
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]

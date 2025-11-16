@@ -300,9 +300,17 @@ public class UsuarioController {
             AuthenticationResponse response = new AuthenticationResponse(
                 token,
                 usuario.getIdUsuario(),
-                usuario.getEmail(),
                 usuario.getNombre(),
+                usuario.getSNombre(),
                 usuario.getAPaterno(),
+                usuario.getAMaterno(),
+                usuario.getRut(),
+                usuario.getDv(),
+                usuario.getFechaNacimiento(),
+                usuario.getIdRegion(),
+                usuario.getDireccion(),
+                usuario.getEmail(),
+                usuario.getTelefono(),
                 usuario.getRol()
             );
             return ResponseEntity.ok(response);

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -190,7 +191,7 @@ public class UsuarioController {
     })
     @RequireRole({"USER", "ADMIN"})
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateUsuario(
+    public ResponseEntity<?> updateUsuario(
             @Parameter(description = "ID del usuario a actualizar", example = "1")
             @PathVariable Integer id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -202,7 +203,16 @@ public class UsuarioController {
                     )
                 )
             )
-            @org.springframework.web.bind.annotation.RequestBody Usuario usuario) {
+            @org.springframework.web.bind.annotation.RequestBody Usuario usuario,
+            HttpServletRequest request) {
+            
+            String userRol = (String) request.getAttribute("userRol");
+            Integer usuarioId = (Integer) request.getAttribute("usuarioId");
+
+            if ("USER".equals(userRol) && !id.equals(usuarioId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             Usuario usuarioActualizado = usuarioService.update(id, usuario);
             return ResponseEntity.ok(usuarioActualizado);
     }
@@ -218,7 +228,7 @@ public class UsuarioController {
     })
     @RequireRole({"USER", "ADMIN"})
     @PatchMapping("/{id}")
-    public ResponseEntity<Usuario> partialUpdateUsuario(
+    public ResponseEntity<?> partialUpdateUsuario(
             @Parameter(description = "ID del Usuario", example = "1")
             @PathVariable Integer id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -230,7 +240,16 @@ public class UsuarioController {
                     )
                 )
             )
-            @org.springframework.web.bind.annotation.RequestBody Usuario usuario) {
+            @org.springframework.web.bind.annotation.RequestBody Usuario usuario,
+            HttpServletRequest request) {
+            
+            String userRol = (String) request.getAttribute("userRol");
+            Integer usuarioId = (Integer) request.getAttribute("usuarioId");
+
+            if ("USER".equals(userRol) && !id.equals(usuarioId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             Usuario usuarioActualizado = usuarioService.partialUpdate(id, usuario);
             return ResponseEntity.ok(usuarioActualizado);
     }
